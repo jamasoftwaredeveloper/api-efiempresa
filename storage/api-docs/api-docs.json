@@ -1,0 +1,768 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Productos y Cart",
+        "description": "Documentación de la API para gestionar productos y ventas",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registro de usuario",
+                "description": "Permite registrar un nuevo usuario.",
+                "operationId": "0903f2e0df1a8857bee538fc055417f0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Datos inválidos"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Inicio de sesión",
+                "description": "Permite a un usuario iniciar sesión y obtener un token.",
+                "operationId": "2dd578ff7aba2721293dac66833b27d1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjM0NTY3ODkwLCJleHBpcnkiOjE2MzY1NzMwMzJ9.WVgqOjkVUwYXOkQpR3jtZJ9bwY_YdYwY2bOpwAq7alA"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciales inválidas"
+                    }
+                }
+            }
+        },
+        "/cart": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Obtener el carrito del usuario",
+                "description": "Devuelve el carrito del usuario, crea uno si no existe",
+                "operationId": "86f867f72e674aacd82942dcf38ba77e",
+                "responses": {
+                    "200": {
+                        "description": "Carrito obtenido correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID del carrito",
+                                            "type": "integer"
+                                        },
+                                        "user_id": {
+                                            "description": "ID del usuario",
+                                            "type": "integer"
+                                        },
+                                        "created_at": {
+                                            "description": "Fecha de creación del carrito",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "description": "Fecha de última actualización",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "cart_items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "ID del artículo del carrito",
+                                                        "type": "integer"
+                                                    },
+                                                    "cart_id": {
+                                                        "description": "ID del carrito asociado",
+                                                        "type": "integer"
+                                                    },
+                                                    "product_id": {
+                                                        "description": "ID del producto",
+                                                        "type": "integer"
+                                                    },
+                                                    "quantity": {
+                                                        "description": "Cantidad de producto en el carrito",
+                                                        "type": "integer"
+                                                    },
+                                                    "product": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "description": "ID del producto",
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "description": "Nombre del producto",
+                                                                "type": "string"
+                                                            },
+                                                            "active": {
+                                                                "description": "Estado de activación del producto",
+                                                                "type": "integer"
+                                                            },
+                                                            "price": {
+                                                                "description": "Precio del producto",
+                                                                "type": "string"
+                                                            },
+                                                            "stock": {
+                                                                "description": "Cantidad disponible en inventario",
+                                                                "type": "integer"
+                                                            },
+                                                            "ean": {
+                                                                "description": "Código EAN del producto",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encuentra el carrito"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cart/add": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Agregar producto al carrito",
+                "description": "Agrega un producto al carrito del usuario",
+                "operationId": "de31cc51185f893daa9bc71f17a59c60",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "description": "ID del producto",
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "description": "Cantidad del producto",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Se ha guardo correctamente el carrito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID del carrito",
+                                            "type": "integer"
+                                        },
+                                        "user_id": {
+                                            "description": "ID del usuario",
+                                            "type": "integer"
+                                        },
+                                        "created_at": {
+                                            "description": "Fecha de creación del carrito",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "description": "Fecha de última actualización",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "cart_items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "ID del artículo del carrito",
+                                                        "type": "integer"
+                                                    },
+                                                    "cart_id": {
+                                                        "description": "ID del carrito asociado",
+                                                        "type": "integer"
+                                                    },
+                                                    "product_id": {
+                                                        "description": "ID del producto",
+                                                        "type": "integer"
+                                                    },
+                                                    "quantity": {
+                                                        "description": "Cantidad de producto en el carrito",
+                                                        "type": "integer"
+                                                    },
+                                                    "product": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "description": "ID del producto",
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "description": "Nombre del producto",
+                                                                "type": "string"
+                                                            },
+                                                            "active": {
+                                                                "description": "Estado de activación del producto",
+                                                                "type": "integer"
+                                                            },
+                                                            "price": {
+                                                                "description": "Precio del producto",
+                                                                "type": "string"
+                                                            },
+                                                            "stock": {
+                                                                "description": "Cantidad disponible en inventario",
+                                                                "type": "integer"
+                                                            },
+                                                            "ean": {
+                                                                "description": "Código EAN del producto",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error al agregar producto"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cart/remove/{itemId}": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Eliminar producto del carrito",
+                "description": "Elimina un producto del carrito del usuario",
+                "operationId": "07c2761625ef40eeba86661b19582ab3",
+                "parameters": [
+                    {
+                        "name": "itemId",
+                        "in": "path",
+                        "description": "ID del artículo a eliminar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Producto eliminado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Producto no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/cart/taxes": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Calcular impuestos del carrito",
+                "description": "Calcula los impuestos basados en los productos del carrito",
+                "operationId": "b4f5fffba5a53f2ce2ae9abddd716e1c",
+                "responses": {
+                    "200": {
+                        "description": "Impuestos calculados correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "taxes": {
+                                            "description": "El valor de los impuestos calculados",
+                                            "type": "number",
+                                            "format": "float"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Obtener productos",
+                "description": "Devuelve una lista de productos, con la opción de filtrar por precio, disponibilidad o EAN",
+                "operationId": "c1ff6f862214e1896c59cfe0491ce0e8",
+                "parameters": [
+                    {
+                        "name": "price_min",
+                        "in": "query",
+                        "description": "Precio mínimo",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "price_max",
+                        "in": "query",
+                        "description": "Precio máximo",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "available",
+                        "in": "query",
+                        "description": "Disponibilidad del producto (1 = disponible, 0 = no disponible)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ean",
+                        "in": "query",
+                        "description": "Código EAN del producto",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de productos obtenida correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "name",
+                                        "price",
+                                        "stock",
+                                        "ean"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "description": "Nombre del producto",
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "description": "Precio del producto",
+                                            "type": "string"
+                                        },
+                                        "stock": {
+                                            "description": "Cantidad disponible en stock",
+                                            "type": "integer"
+                                        },
+                                        "ean": {
+                                            "description": "Código EAN del producto",
+                                            "type": "string"
+                                        },
+                                        "active": {
+                                            "description": "Estado de disponibilidad (1=activo, 0=inactivo)",
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Parámetros de filtro inválidos"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Crear producto",
+                "description": "Crea un nuevo producto en el sistema",
+                "operationId": "399770d33fa4672f1216707d0e236763",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "stock",
+                                    "ean"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nombre del producto",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "Precio del producto",
+                                        "type": "string"
+                                    },
+                                    "stock": {
+                                        "description": "Cantidad disponible en stock",
+                                        "type": "integer"
+                                    },
+                                    "ean": {
+                                        "description": "Código EAN del producto",
+                                        "type": "string"
+                                    },
+                                    "active": {
+                                        "description": "Estado de disponibilidad (1=activo, 0=inactivo)",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Producto creado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "name",
+                                        "price",
+                                        "stock",
+                                        "ean"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "description": "Nombre del producto",
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "description": "Precio del producto",
+                                            "type": "string"
+                                        },
+                                        "stock": {
+                                            "description": "Cantidad disponible en stock",
+                                            "type": "integer"
+                                        },
+                                        "ean": {
+                                            "description": "Código EAN del producto",
+                                            "type": "string"
+                                        },
+                                        "active": {
+                                            "description": "Estado de disponibilidad (1=activo, 0=inactivo)",
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error al crear el producto"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/products/{id}": {
+            "put": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Actualizar producto",
+                "description": "Actualiza un producto existente en el sistema",
+                "operationId": "1419d479f9340e30e67fe21a2ca525b7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del producto",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "stock",
+                                    "ean"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nombre del producto",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "Precio del producto",
+                                        "type": "string"
+                                    },
+                                    "stock": {
+                                        "description": "Cantidad disponible en stock",
+                                        "type": "integer"
+                                    },
+                                    "ean": {
+                                        "description": "Código EAN del producto",
+                                        "type": "string"
+                                    },
+                                    "active": {
+                                        "description": "Estado de disponibilidad (1=activo, 0=inactivo)",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Producto actualizado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "name",
+                                        "price",
+                                        "stock",
+                                        "ean"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "description": "Nombre del producto",
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "description": "Precio del producto",
+                                            "type": "string"
+                                        },
+                                        "stock": {
+                                            "description": "Cantidad disponible en stock",
+                                            "type": "integer"
+                                        },
+                                        "ean": {
+                                            "description": "Código EAN del producto",
+                                            "type": "string"
+                                        },
+                                        "active": {
+                                            "description": "Estado de disponibilidad (1=activo, 0=inactivo)",
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error al actualizar el producto"
+                    },
+                    "404": {
+                        "description": "Producto no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Token de autenticación para acceder a la API",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Cart",
+            "description": "Cart"
+        },
+        {
+            "name": "Product",
+            "description": "Product"
+        }
+    ]
+}

@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  laravel-app:
+    container_name: proyecto-efiempresa
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"  # Expone el puerto 8000 de Laravel al puerto 8000 de la máquina host
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=api_efiempresa
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+    volumes:
+      - .:/var/www/html  # Monta todo el proyecto en el contenedor
+    depends_on:
+      - db  # Asegura que el servicio de base de datos esté en funcionamiento antes de iniciar Laravel
+    networks:
+      - app-network
+
+  db:
+    container_name: postgres
+    image: postgres:13
+    environment:
+      POSTGRES_DB: api_efiempresa  # Nombre de la base de datos
+      POSTGRES_USER: postgres  # Usuario de PostgreSQL
+      POSTGRES_PASSWORD: postgres  # Contraseña de PostgreSQL
+    volumes:
+      - db_data:/var/lib/postgresql/data  # Volumen para persistir los datos
+    ports:
+      - "5432:5432"  # Exposición del puerto PostgreSQL
+    networks:
+      - app-network
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com  # Email de inicio de sesión de pgAdmin
+      PGADMIN_DEFAULT_PASSWORD: root  # Contraseña de pgAdmin
+    ports:
+      - "8080:80"  # Acceder a pgAdmin a través del puerto 8080
+    networks:
+      - app-network
+
+volumes:
+  db_data:  # Volumen persistente para los datos de PostgreSQL
+  swagger_data:  # Volumen adicional para Swagger (si es necesario)
+
+networks:
+  app-network:  # Red de Docker compartida entre los contenedores
