@@ -56,9 +56,10 @@ class Handler extends ExceptionHandler
         if ($request->is('api/register') || $request->is('api/login') || $request->is('api/products')) {
             return parent::render($request, $exception);
         }  */
+        /*
         if ($request->is('/')) {
             return redirect('/api/documentation');
-        }
+        }*/
         if ($exception instanceof ValidationException) {
             return response()->json([
                 'errors' => $exception->errors(),
