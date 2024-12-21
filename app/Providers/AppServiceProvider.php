@@ -2,7 +2,12 @@
 
 namespace App\Providers;
 
+use App\Repositories\CartRepository;
+use App\Repositories\Interfaces\CartRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Repositories\ProductRepository;
 use Illuminate\Support\ServiceProvider;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->app->bind(ProductRepositoryInterface::class, concrete: ProductRepository::class);
+        $this->app->bind(CartRepositoryInterface::class, concrete: CartRepository::class);
+
     }
 }

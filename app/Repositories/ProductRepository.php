@@ -3,8 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 
-class ProductRepository
+class ProductRepository implements ProductRepositoryInterface
 {
     public function getAllWithFilters($filters)
     {

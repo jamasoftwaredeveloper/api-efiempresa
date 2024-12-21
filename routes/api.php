@@ -33,6 +33,4 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/products', [ProductController::class, 'index']);
 
-Route::get('/', function () {
-    return response()->json("Conectada",200);
-});
+

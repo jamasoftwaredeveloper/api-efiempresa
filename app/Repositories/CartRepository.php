@@ -6,9 +6,10 @@ namespace App\Repositories;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Repositories\Interfaces\CartRepositoryInterface;
 
 
-class CartRepository
+class CartRepository implements CartRepositoryInterface
 {
     public function createCart($userId)
     {
@@ -45,7 +46,7 @@ class CartRepository
     public function removeProductFromCart($userId, $cartItemId)
     {
 
-        $cart =$this->createCartIfNotExists($userId);
+        $cart = $this->createCartIfNotExists($userId);
         // Elimina el producto del carrito
         $cartItem = CartItem::where('cart_id',  $cart->id)->where('id', $cartItemId)->first();
 
@@ -71,14 +72,14 @@ class CartRepository
     }
 
     public function createCartIfNotExists($userId)
-{
-    $cart = Cart::where('user_id', $userId)->first();
+    {
+        $cart = Cart::where('user_id', $userId)->first();
 
-    if (!$cart) {
-        // Si no existe un carrito para el usuario, crea uno
-        $cart = Cart::create(['user_id' => $userId]);
+        if (!$cart) {
+            // Si no existe un carrito para el usuario, crea uno
+            $cart = Cart::create(['user_id' => $userId]);
+        }
+
+        return $cart;
     }
-
-    return $cart;
-}
 }
