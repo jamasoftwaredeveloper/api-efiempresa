@@ -1,4 +1,4 @@
-#Información de proyecto
+# Información de proyecto
 
 Este proyecto consiste en una API RESTful desarrollada con Laravel 10 para gestionar usuarios, productos y ventas. Permite la creación de usuarios mediante un endpoint de registro que valida los datos recibidos y los almacena en la base de datos. Además, los administradores pueden realizar operaciones CRUD sobre productos y ventas, permitiendo crear, leer, actualizar y eliminar estos registros.
 
