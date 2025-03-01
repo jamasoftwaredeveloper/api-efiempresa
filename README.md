@@ -21,8 +21,10 @@ Este proyecto consiste en una API RESTful desarrollada con Laravel 10 para gesti
 Aptitudes: Laravel · laravel Sanctum · Migración de datos · Seeders · Factory · Swagger UI
 
 Se adicciono pago con epayco y permisos, roles, base datos con sqlite, hay una base datos ya creada, solo toca configurar la ruta en el archivo .env
+
 ![image](https://github.com/user-attachments/assets/127419c9-7795-45e9-94aa-da6701ae136f)
 Configurar epayco en el archivo .env
+
 ![image](https://github.com/user-attachments/assets/66235463-eef6-4dd2-ad08-b05c84ec4648)
 
 
