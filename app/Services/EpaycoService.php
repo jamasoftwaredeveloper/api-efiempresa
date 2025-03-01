@@ -2,40 +2,34 @@
 
 namespace App\Services;
 
+use App\Repositories\Interfaces\EpaycoRepositoryInterface;
 use Exception;
 use Epayco\Epayco;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class EpaycoService
 {
     protected $epayco;
+    protected $epaycoRepository;
 
-    public function __construct()
+    public function __construct(EpaycoRepositoryInterface $epaycoRepository)
     {
-        // Inicializa el SDK utilizando las configuraciones centralizadas
-        Log::info( config('services.epayco.private_key'));
-        Log::info( config('services.epayco.public_key'));
-        Log::info( config('services.epayco.test'));
-        $this->epayco = new Epayco([
-            'apiKey'     => config('services.epayco.public_key'),
-            'privateKey' => config('services.epayco.private_key'),
-            'test'       => config('services.epayco.test'),
-            'lenguage'   => 'ES'
-        ]);
+        $this->epaycoRepository = $epaycoRepository;
     }
 
     /**
      * Inicia la transacción con los datos recibidos.
      *
-     * @param array $data
+     * @param Request $request
+     * @param string $tokenId
+     * @param string $customerId
      * @throws Exception
      */
-    public function startTransaction(array $data)
+    public function startTransaction(Request $request, $tokenId, $customerId)
     {
         try {
-            // Aquí puedes ajustar la estructura de $data según la documentación de ePayco
-            $response = $this->epayco->charge->create($data);
-            return $response;
+            return $this->epaycoRepository->startTransaction($request, $tokenId, $customerId);
         } catch (Exception $e) {
             Log::error('Error al iniciar transacción en ePayco: ' . $e->getMessage());
             throw $e;
@@ -59,25 +53,22 @@ class EpaycoService
     /**
      * Generar el toke ePayco.
      *
-     * @param array $data
+     * @param Request $request
      */
-    public function generarToken(array $data)
+    public function generarToken(Request $request)
     {
-        $token =  $this->epayco->token->create($data);
-
-        return $token; // Retorna true si la validación es exitosa.
+        return $this->epaycoRepository->generarToken($request);
     }
 
 
-        /**
+    /**
      * Generar el toke ePayco.
      *
-     * @param array $data
+     * @param Request $request
+     * @param string $tokenId
      */
-    public function generarClient(array $data)
+    public function generarClient(Request $request, $tokenId)
     {
-        $customer = $this->epayco->customer->create($data);
-
-        return $customer; // Retorna true si la validación es exitosa.
+        return $this->epaycoRepository->generarClient($request, $tokenId);
     }
 }

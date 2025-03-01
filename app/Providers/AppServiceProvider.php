@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Repositories\CartRepository;
+use App\Repositories\EpaycoRepository;
 use App\Repositories\Interfaces\CartRepositoryInterface;
+use App\Repositories\Interfaces\EpaycoRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\ProductRepository;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(ProductRepositoryInterface::class, concrete: ProductRepository::class);
         $this->app->bind(CartRepositoryInterface::class, concrete: CartRepository::class);
+        $this->app->bind(EpaycoRepositoryInterface::class, concrete: EpaycoRepository::class);
 
     }
 }
