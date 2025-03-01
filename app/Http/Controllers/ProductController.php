@@ -70,7 +70,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         try {
-            $filters = $request->only(['price_min', 'price_max', 'available', 'ean']);
+            $filters = $request->only(['price_min', 'price_max', 'available', 'ean', 'search']);
             $query = $this->productService->getProductsWithFilters($filters);
             $products = $query->paginate(15);
             return new ProductCollection($products);

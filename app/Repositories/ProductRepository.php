@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Product;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -11,10 +12,16 @@ class ProductRepository implements ProductRepositoryInterface
     {
         $query = Product::query();
 
-        if (isset($filters['price_min'])) {
+
+        if (isset($filters['search'])) {
+            $query->where('name', 'LIKE', "%{$filters['search']}%");
+        }
+        Log::info($filters['price_min']);
+        if (isset($filters['price_min']) && $filters['price_min'] > 0) {
+            Log::info("entro");
             $query->where('price', '>=', $filters['price_min']);
         }
-        if (isset($filters['price_max'])) {
+        if (isset($filters['price_max']) && $filters['price_max'] > 0) {
             $query->where('price', '<=', $filters['price_max']);
         }
 
