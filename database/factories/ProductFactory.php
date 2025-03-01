@@ -18,10 +18,12 @@ class ProductFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-            'price' => $this->faker->randomFloat(2, 5, 1000), // Precio entre 5 y 1000
+            'price' => $this->faker->randomFloat(2, 5, 30000), // Precio entre 5 y 1000
             'stock' => $this->faker->numberBetween(1, 100),   // Stock entre 1 y 100
             'ean' => $this->faker->unique()->ean13,           // Código de barras EAN-13
             'active' => $this->faker->boolean,
+            'image' => "https://picsum.photos/300/300?random=" .  $this->faker->unique()->numberBetween(1, 1000),
+
         ];
     }
 }

@@ -82,9 +82,18 @@ class AuthController extends Controller
         $token = $this->authService->login($credentials);
 
         if ($token) {
-            return response()->json(['token' => $token]);
+            return response()->json(['token' => $token, "roles" => $request->user()->getRoleNames(), "permissions" => $request->user()->getAllPermissions(), 'user'=>$request->user()]);
         }
 
         return response()->json(['message' => 'Invalid credentials'], 401);
+    }
+
+
+    public function checkToken(Request $request)
+    {
+        return response()->json([
+            'authenticated' => auth()->check(),
+            'user' => auth()->user()
+        ]);
     }
 }

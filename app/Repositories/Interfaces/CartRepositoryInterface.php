@@ -55,4 +55,12 @@ interface CartRepositoryInterface
      * @return \App\Models\Cart
      */
     public function createCartIfNotExists($userId);
+
+    /**
+     * Crear un carrito si no existe para el usuario.
+     *
+     * @param int $userId
+     * @return boolean
+     */
+    public function clearCart($userId);
 }

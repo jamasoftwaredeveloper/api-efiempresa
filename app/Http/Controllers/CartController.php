@@ -204,4 +204,43 @@ class CartController extends Controller
             ], 500);
         }
     }
+
+
+    /**
+     * @OA\Post(
+     *     path="/cart/clear",
+     *     summary="Vaciar el carrito de compras",
+     *     description="Elimina todos los productos del carrito del usuario autenticado.",
+     *     tags={"Cart"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Carrito eliminado correctamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="deleted", type="boolean", description="Indica si el carrito fue eliminado exitosamente")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error al eliminar el carrito",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", description="Mensaje de error"),
+     *             @OA\Property(property="message", type="string", description="Detalle del error")
+     *         )
+     *     )
+     * )
+     */
+    public function clearCart(Request $request)
+    {
+        try {
+            $deleted = $this->cartService->clearCart($request->user()->id);
+            return response()->json(['deleted' => $deleted]);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'Algo salió mal al eliminar el carrito',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

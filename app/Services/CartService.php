@@ -45,4 +45,9 @@ class CartService
     {
         return $this->cartRepository->createCartIfNotExists($userId);
     }
+
+    public function clearCart($userId)
+    {
+        return $this->cartRepository->clearCart($userId);
+    }
 }

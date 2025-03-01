@@ -7,7 +7,7 @@ namespace App\Repositories;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Repositories\Interfaces\CartRepositoryInterface;
-
+use Illuminate\Support\Facades\Log;
 
 class CartRepository implements CartRepositoryInterface
 {
@@ -18,7 +18,22 @@ class CartRepository implements CartRepositoryInterface
 
     public function getCartByUser($userId)
     {
-        return Cart::with('cartItems.product')->where('user_id', $userId)->first();
+
+        $cartItems = CartItem::with(['product:id,name,image,price'])
+            ->whereHas('cart', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->select('product_id', 'quantity')
+            ->get();
+
+        $total = $cartItems->sum(function ($item) {
+            return $item->quantity * $item->product->price;
+        });
+
+        return [
+            'total' => $total,
+            'items' => $cartItems,
+        ];
     }
 
     public function addProductToCart($userId, $cartId, $productId, $quantity)
@@ -48,10 +63,16 @@ class CartRepository implements CartRepositoryInterface
 
         $cart = $this->createCartIfNotExists($userId);
         // Elimina el producto del carrito
-        $cartItem = CartItem::where('cart_id',  $cart->id)->where('id', $cartItemId)->first();
+        $cartItem = CartItem::where('cart_id',  $cart->id)->where('product_id', $cartItemId)->first();
 
         if ($cartItem) {
-            $cartItem->delete();
+            // Si la cantidad es mayor a 1, se decrementa; si es 1, se elimina el registro
+            if ($cartItem->quantity > 1) {
+                $cartItem->quantity = $cartItem->quantity - 1;
+                $cartItem->save();
+            } else {
+                $cartItem->delete();
+            }
         }
 
         // Devuelve el carrito actualizado
@@ -77,9 +98,25 @@ class CartRepository implements CartRepositoryInterface
 
         if (!$cart) {
             // Si no existe un carrito para el usuario, crea uno
-            $cart = Cart::create(['user_id' => $userId]);
+            $cart = $this->createCart($userId);
         }
 
         return $cart;
+    }
+
+    public function clearCart($userId)
+    {
+
+        $cart = Cart::where('user_id', $userId)->first();
+
+        if (!$cart) {
+            return response()->json(['message' => 'No hay carrito para eliminar'], 404);
+        }
+
+        // Eliminar todos los elementos del carrito
+        $cart->cartItems()->delete();
+
+        // Eliminar el carrito
+        return $cart->delete();
     }
 }

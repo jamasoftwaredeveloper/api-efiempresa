@@ -438,6 +438,59 @@
                 ]
             }
         },
+        "/cart/clear": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Vaciar el carrito de compras",
+                "description": "Elimina todos los productos del carrito del usuario autenticado.",
+                "operationId": "fe9f69898cb39b0fa0d9bd2cdaa46322",
+                "responses": {
+                    "200": {
+                        "description": "Carrito eliminado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "deleted": {
+                                            "description": "Indica si el carrito fue eliminado exitosamente",
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al eliminar el carrito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "description": "Mensaje de error",
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "description": "Detalle del error",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/products": {
             "get": {
                 "tags": [

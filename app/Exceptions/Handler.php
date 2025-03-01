@@ -52,10 +52,10 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        /*
-        if ($request->is('api/register') || $request->is('api/login') || $request->is('api/products')) {
+       
+        if ($request->is('api/register') || $request->is('api/login')) {
             return parent::render($request, $exception);
-        }  */
+        }
         /*
         if ($request->is('/')) {
             return redirect('/api/documentation');
@@ -72,7 +72,6 @@ class Handler extends ExceptionHandler
                     'error' => 'Unauthorized, token is missing or invalid.'
                 ], 401);
             }
-
             // Intentar autenticar al usuario con el token
             if (!Auth::guard('sanctum')->check()) {
                 return response()->json([
